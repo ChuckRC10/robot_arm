@@ -2,7 +2,7 @@
 len1 = 200
 len2 = 200
 
-damping_const = 50
+damping_const = 200
 max_pos_delta = 6
 
 screen_size = [1000, 1000]
