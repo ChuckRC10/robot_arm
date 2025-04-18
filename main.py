@@ -1,6 +1,6 @@
 import pygame
 import jax.numpy as jnp
-from gui_files.game_view import game_setup, did_quit, paint_arm, paint_rect
+from gui_files.game_view import game_setup, paint_arm, paint_rect
 from gui_files.handling_inputs import get_movement
 from config import backgroundColor, maxPositionDelta, armLength, armNumber, dampingConstant
 from arm.arm_model import RobotArm
