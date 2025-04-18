@@ -1,5 +1,6 @@
 # Import pygame.locals for easier access to key coordinates
 # Updated to conform to flake8 and black standards
+import jax.numpy as jnp
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -7,20 +8,21 @@ from pygame.locals import (
     K_RIGHT,
 )
 
-def get_movement(pressed_key, max_pos_delta):
+def get_movement(pressed_key, maxPositionDelta) -> jnp.array:
     '''
     returns how far the pointer will move on the screen based on key inputs
     '''
-    x_mvmnt = 0
-    y_mvmnt = 0
+    xMovement = 0
+    yMovement = 0
     # get user input
     if pressed_key[K_UP]:
-        y_mvmnt = -max_pos_delta
+        yMovement = -maxPositionDelta
     if pressed_key[K_DOWN]:
-        y_mvmnt = max_pos_delta
+        yMovement = maxPositionDelta
     if pressed_key[K_LEFT]:
-        x_mvmnt = -max_pos_delta
+        xMovement = -maxPositionDelta
     if pressed_key[K_RIGHT]:
-        x_mvmnt = max_pos_delta
+        xMovement = maxPositionDelta
 
-    return x_mvmnt, y_mvmnt
+    movementDeltaVector = jnp.array([xMovement, yMovement])
+    return movementDeltaVector

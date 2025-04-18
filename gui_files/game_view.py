@@ -1,15 +1,15 @@
 import pygame
-import numpy as np
-from config import line_color1, line_color2, screen_size
+import jax.numpy as jnp
+from config import arm1color, arm2color, screenSize
 
 def game_setup():
     pygame.init()
     clock = pygame.time.Clock()
-    screen = pygame.display.set_mode(screen_size)
+    screen = pygame.display.set_mode(screenSize)
     return clock, screen
 
 def get_origin():
-    origin = [screen_size[0]/2, screen_size[1]/2]
+    origin = [screenSize[0]/2, screenSize[1]/2]
     return origin
 
 def did_quit():
@@ -19,14 +19,20 @@ def did_quit():
         else:
             return True
         
-def paint_rect(screen, wntd_pos: list):
+def paint_rect(screen, wantedPosition):
     origin = get_origin()
-    rect1 = pygame.Rect(wntd_pos[0] + origin[0], wntd_pos[1] + origin[1], 5, 5)
-    pygame.draw.rect(screen, line_color1, rect1) 
+    rectangleXPosition = float(wantedPosition[0] + origin[0])
+    rectangleYPosition = float(wantedPosition[1] + origin[1])
+    pointerRectangle = pygame.Rect(rectangleXPosition, rectangleYPosition, 5, 5)
+    pygame.draw.rect(screen, arm1color, pointerRectangle) 
 
-def paint_arm(screen, vec1: list, vec2: list):
-    origin = np.array(get_origin())
-    vec1 = np.array(vec1)
-    vec2 = np.array(vec2)
-    pygame.draw.line(screen, line_color1, origin, vec1 + origin, 5)
-    pygame.draw.line(screen, line_color2, vec1 + origin, vec1 + vec2 + origin, 5)
+def paint_arm(screen, armVectors: jnp.array):
+    origin = jnp.array(get_origin())
+
+    for armNum in range(len(armVectors)):
+        if armNum == 0:
+            startingPosition = origin
+        else:
+          startingPosition = origin + jnp.sum(armVectors[0:armNum], 0)
+        endingPosition = origin + jnp.sum(armVectors[0:armNum + 1], 0)
+        pygame.draw.line(screen, arm2color, startingPosition.tolist(), endingPosition.tolist(), 5)

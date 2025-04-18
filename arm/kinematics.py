@@ -1,7 +1,8 @@
-import numpy as np
+import jax.numpy as jnp
 
-def inv_kinematics_least_sqr(J: np.array, e: np.array, damping_c: float) -> list:
+def inv_kinematics_least_sqr(Jacobian: jnp.array, error: jnp.array, damping_c: float) -> list:
     """Calculate delta q, damped least-squares"""
-    damping_matrix = np.linalg.inv(J.T @ J + damping_c**2 * np.eye(2))
-    delta_q = damping_matrix @ J.T @ e
-    return delta_q.tolist()
+    eye_size = Jacobian.shape[1]
+    damping_matrix = jnp.linalg.inv(Jacobian.T @ Jacobian + damping_c**2 * jnp.eye(eye_size))
+    delta_q = damping_matrix @ Jacobian.T @ error
+    return delta_q
