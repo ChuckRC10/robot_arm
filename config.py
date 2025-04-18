@@ -1,12 +1,11 @@
 
-len1 = 200
-len2 = 200
+armLength = 100
+armNumber = 4
 
-damping_const = 200
-max_pos_delta = 6
+dampingConstant = 100
+maxPositionDelta = 6
 
-screen_size = [1000, 1000]
+screenSize = [1000, 1000]
 
-line_color1 = (255, 0, 0)
-line_color2 = (0, 255, 0)
-background_color = (240, 255, 255)
+armColor = (255, 0, 0)
+backgroundColor = (240, 255, 255)
