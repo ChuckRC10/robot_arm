@@ -11,13 +11,6 @@ def game_setup():
 def get_origin():
     origin = [screenSize[0]/2, screenSize[1]/2]
     return origin
-
-def did_quit():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            return False  
-        else:
-            return True
         
 def paint_rect(screen, wantedPosition):
     origin = get_origin()

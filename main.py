@@ -15,9 +15,6 @@ wntd_pos = arm.get_end_effector(arm.armAngles)
 running = True
 while running:
 
-    # 1st screen update
-    #running = did_quit()
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False  
