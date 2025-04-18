@@ -10,14 +10,9 @@ class RobotArm:
         self.armAngles = jnp.zeros(self.armNumber)
 
     def set_angles(self, armAngles: jnp.array):
-        expectedShape = (self.armNumber, )
-        if armAngles.shape != expectedShape:
-            raise TypeError("incorrect number of angles in input array")
-        
         self.armAngles = armAngles
 
     def getArmVectors(self, angles) -> jnp.array:
-        # set and shorten variables
         lens = self.armLengths
         globalAngles = jnp.cumsum(angles)
 

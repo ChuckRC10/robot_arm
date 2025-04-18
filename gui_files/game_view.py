@@ -1,6 +1,6 @@
 import pygame
 import jax.numpy as jnp
-from config import arm1color, arm2color, screenSize
+from config import armColor, screenSize
 
 def game_setup():
     pygame.init()
@@ -14,10 +14,9 @@ def get_origin():
         
 def paint_rect(screen, wantedPosition):
     origin = get_origin()
-    rectangleXPosition = float(wantedPosition[0] + origin[0])
-    rectangleYPosition = float(wantedPosition[1] + origin[1])
-    pointerRectangle = pygame.Rect(rectangleXPosition, rectangleYPosition, 5, 5)
-    pygame.draw.rect(screen, arm1color, pointerRectangle) 
+    rectanglePosition = wantedPosition + origin
+    pointerRectangle = pygame.Rect(rectanglePosition[0], rectanglePosition[1], 5, 5)
+    pygame.draw.rect(screen, armColor, pointerRectangle) 
 
 def paint_arm(screen, armVectors: jnp.array):
     origin = jnp.array(get_origin())
@@ -28,4 +27,4 @@ def paint_arm(screen, armVectors: jnp.array):
         else:
           startingPosition = origin + jnp.sum(armVectors[0:armNum], 0)
         endingPosition = origin + jnp.sum(armVectors[0:armNum + 1], 0)
-        pygame.draw.line(screen, arm2color, startingPosition.tolist(), endingPosition.tolist(), 5)
+        pygame.draw.line(screen, armColor, startingPosition.tolist(), endingPosition.tolist(), 5)
