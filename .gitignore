@@ -4,3 +4,7 @@ __pycache__/config.cpython-312.pyc
 __pycache__/game_view.cpython-312.pyc
 gui_files/__pycache__/game_view.cpython-312.pyc
 gui_files/__pycache__/game_view.cpython-312.pyc
+arm/__pycache__/arm_model.cpython-312.pyc
+arm/__pycache__/kinematics.cpython-312.pyc
+gui_files/__pycache__/game_view.cpython-312.pyc
+gui_files/__pycache__/handling_inputs.cpython-312.pyc
