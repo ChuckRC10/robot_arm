@@ -1,45 +1,39 @@
-import numpy as np
+import jax
+import jax.numpy as jnp
+from jax.numpy import sin, cos
 
 class RobotArm:
-    def __init__(self, length1:float, length2: float):
+    def __init__(self, armLengths:jnp.array):
         
-        self.l1 = length1
-        self.l2 = length2
-        self.alpha = 0.0
-        self.beta = 0.0
+        self.armLengths = armLengths
+        self.armNumber = len(armLengths)
+        self.armAngles = jnp.zeros(self.armNumber)
 
-    def set_angles(self, a1: float, a2: float):
-        self.alpha = a1
-        self.beta = a2
+    def set_angles(self, armAngles: jnp.array):
+        self.armAngles = armAngles
 
-    def get_vec1(self):
-        x = self.l1 * np.cos(self.alpha)
-        y = self.l1 * np.sin(self.alpha)
-        return [x, y]
+    def getArmVectors(self, angles) -> jnp.array:
+        lens = self.armLengths
+        globalAngles = jnp.cumsum(angles)
 
-    def get_vec2(self):
-        x = self.l2 * np.cos(self.alpha + self.beta)
-        y = self.l2 * np.sin(self.alpha + self.beta)
-        return [x, y]
+        # calculate vector coordinates
+        xArray = lens * jnp.cos(globalAngles)
+        yArray = lens * jnp.sin(globalAngles)
+        
+        armVectorArray = jnp.array([xArray, yArray]).T
+        return armVectorArray
+
+    def get_end_effector(self, angles) -> jnp.array:
+        armVectorArray = self.getArmVectors(angles)
+        armEndVector = jnp.sum(armVectorArray, axis=0)
+
+        return armEndVector
     
-    def get_end_effector(self):
-        vec1 = self.get_vec1()
-        vec2 = self.get_vec2()
-        end_vec = [vec1[0] + vec2[0], vec1[1] + vec2[1]]
-        return end_vec
+    def get_jacobian(self) -> jnp.array:
+        J = jax.jacrev(lambda angles: self.get_end_effector(angles))
+        return J(self.armAngles)
     
-    def get_jacobian(self) -> np.array:
-        # shorten variables
-        l1 = self.l1
-        l2 = self.l2
-        alpha = self.alpha
-        beta = self.beta
-        # calculate Jacobian
-        J = np.array([[-l1*np.sin(alpha)-l2*np.sin(alpha+beta), -l2*np.sin(alpha+beta)],
-            [l1*np.cos(alpha) + l2*np.cos(alpha+beta), l2*np.cos(alpha+beta)]])
-        return J
-    
-    def get_error(self, wntd_pos:list) -> np.array:
-        arm_pos = self.get_end_effector()
-        e = np.array([wntd_pos[0] - arm_pos[0], wntd_pos[1] - arm_pos[1]])
-        return e
+    def get_error(self, wntd_pos: jnp.array) -> jnp.array:
+        arm_pos = self.get_end_effector(self.armAngles)
+        error = wntd_pos - arm_pos
+        return error
