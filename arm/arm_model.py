@@ -7,7 +7,7 @@ class RobotArm:
         
         self.armLengths = armLengths
         self.armNumber = len(armLengths)
-        self.armAngles = jnp.zeros(self.armNumber)
+        self.armAngles = jnp.ones(self.armNumber)
 
     def set_angles(self, armAngles: jnp.array):
         self.armAngles = armAngles

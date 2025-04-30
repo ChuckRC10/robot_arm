@@ -34,7 +34,7 @@ while running:
     jacobian = arm.get_jacobian()
     error = arm.get_error(wntd_pos)
     delta_q = kinematics.inv_kinematics_least_sqr(jacobian, error, dampingConstant)
-
+    ellipse_coefficients = kinematics.get_velocity_ellipse_coefficients(jacobian)
     # update arm angles
     arm.set_angles(arm.armAngles + delta_q)
 

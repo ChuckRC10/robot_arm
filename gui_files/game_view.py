@@ -2,6 +2,9 @@ import pygame
 import jax.numpy as jnp
 from config import armColor, screenSize
 
+# TODO: Draw ellipse at end effector using ellipse sizing.
+#  - Figure out how to properly rotate the ellipse to match angle of end effector (or get angle of ellipse from coefficients)
+
 def game_setup():
     pygame.init()
     clock = pygame.time.Clock()
