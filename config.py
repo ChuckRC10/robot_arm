@@ -1,11 +1,11 @@
 
-armLength = 100
+armLength = 50
 armNumber = 4
 
-dampingConstant = 100
+dampingConstant = 50
 maxPositionDelta = 6
 
-screenSize = [1000, 1000]
+screenSize = [500, 500]
 
 armColor = (255, 0, 0)
 backgroundColor = (240, 255, 255)

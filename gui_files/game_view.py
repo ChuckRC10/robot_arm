@@ -15,7 +15,7 @@ def get_origin():
 def paint_rect(screen, wantedPosition):
     origin = get_origin()
     rectanglePosition = wantedPosition + origin
-    pointerRectangle = pygame.Rect(rectanglePosition[0], rectanglePosition[1], 5, 5)
+    pointerRectangle = pygame.Rect(float(rectanglePosition[0]), float(rectanglePosition[1]), 5, 5)
     pygame.draw.rect(screen, armColor, pointerRectangle) 
 
 def paint_arm(screen, armVectors: jnp.array):
