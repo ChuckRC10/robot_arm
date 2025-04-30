@@ -14,11 +14,22 @@ def get_velocity_ellipse_coefficients(Jacobian: jnp.array) -> jnp.array:
     """
     ellipsoid_equation_matrix = jnp.linalg.inv(Jacobian @ Jacobian.T)
 
-    A_coefficient = ellipsoid_equation_matrix[0, 0] + ellipsoid_equation_matrix[1, 0]
-    B_coefficient = jnp.sum(ellipsoid_equation_matrix)
-    C_coefficient = ellipsoid_equation_matrix[0, 1] + ellipsoid_equation_matrix[1, 1]
+    A_coefficient = ellipsoid_equation_matrix[0, 0]
+    B_coefficient = 2 * ellipsoid_equation_matrix[0, 1]
+    C_coefficient = ellipsoid_equation_matrix[1, 1]
 
     return jnp.array([A_coefficient, B_coefficient, C_coefficient])
+
+def getVelocityEllipseAngle(ellipseCoefficients):
+    A_coefficient = ellipseCoefficients[0]
+    B_coefficient = ellipseCoefficients[1]
+    C_coefficient = ellipseCoefficients[2]
+
+    angle = 0.5 * jnp.arctan(B_coefficient / (A_coefficient - C_coefficient))
+    if jnp.isnan(angle):
+        angle = 0
+
+    return angle
 
 def get_ellipse_size(ellipse_coefficients):
     #TODO: Test if this even works right
@@ -27,15 +38,27 @@ def get_ellipse_size(ellipse_coefficients):
     B_coefficient = ellipse_coefficients[1]
     C_coefficient = ellipse_coefficients[2]
 
-    conic_quadratic_matrix = jnp.array([A_coefficient, B_coefficient/2],
-                                       [B_coefficient/2, C_coefficient])
+    conic_quadratic_matrix = jnp.array([[A_coefficient, B_coefficient/2],
+                                         [B_coefficient/2, C_coefficient]])
     
-    eigenvalue_array = jnp.linalg.eig(conic_quadratic_matrix)
+    eigenvalue_array = jnp.linalg.eigvals(conic_quadratic_matrix)
 
-    new_A_coefficient = eigenvalue_array[0]
-    new_B_coefficient = eigenvalue_array[1]
+    new_A_coefficient = jnp.real(eigenvalue_array[0])
+    new_B_coefficient = jnp.real(eigenvalue_array[1])
 
     major_axis_size = 1/jnp.sqrt(new_A_coefficient)
     minor_axis_size = 1/jnp.sqrt(new_B_coefficient)
+
+    maximum_size = 200
+    minimum_size = .1
+    if jnp.isinf(major_axis_size):
+        major_axis_size = maximum_size
+    if jnp.isinf(minor_axis_size):
+        minor_axis_size = maximum_size
+
+    if jnp.isnan(major_axis_size) or major_axis_size < minimum_size:
+        major_axis_size = minimum_size
+    if jnp.isnan(minor_axis_size) or minor_axis_size < minimum_size:
+        minor_axis_size = minimum_size
 
     return jnp.array([major_axis_size, minor_axis_size])

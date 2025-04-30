@@ -1,8 +1,8 @@
 import pygame
 import jax.numpy as jnp
-from gui_files.game_view import game_setup, paint_arm, paint_rect
+from gui_files.game_view import game_setup, paint_arm, paint_rect, createEllipseRectangle, paintEllipseAngle
 from gui_files.handling_inputs import get_movement
-from config import backgroundColor, maxPositionDelta, armLength, armNumber, dampingConstant
+from config import backgroundColor, ellipseColor, maxPositionDelta, armLength, armNumber, dampingConstant
 from arm.arm_model import RobotArm
 from arm import kinematics
 
@@ -41,13 +41,23 @@ while running:
     # set new arm vectors
     armVectors = arm.getArmVectors(arm.armAngles)
 
+    # set up velocity manipulability ellipse
+    ellipseCoefficients = kinematics.get_velocity_ellipse_coefficients(jacobian)
+    ellipseSize = kinematics.get_ellipse_size(ellipseCoefficients)
+
+    armAngles = arm.armAngles
+    endEffectorPosition = arm.get_end_effector(armAngles)
+
+    referenceRectangle = createEllipseRectangle(endEffectorPosition, float(ellipseSize[0]),float(ellipseSize[1]))
+    ellipseAngle = kinematics.getVelocityEllipseAngle(ellipseCoefficients)
     # 2nd screen update
     paint_rect(screen, wntd_pos)
     paint_arm(screen, armVectors)
+    paintEllipseAngle(screen, ellipseColor, referenceRectangle, ellipseAngle)
 
     # refresh screen
     pygame.display.flip()
-    clock.tick(30) # ensure program maintains 30fps
+    clock.tick(60) # ensure program maintains 30fps
 
 pygame.quit()
 

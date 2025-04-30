@@ -2,9 +2,7 @@ import pygame
 import jax.numpy as jnp
 from config import armColor, screenSize
 
-# TODO: Draw ellipse at end effector using ellipse sizing.
-#  - Figure out how to properly rotate the ellipse to match angle of end effector (or get angle of ellipse from coefficients)
-
+# TODO:
 def game_setup():
     pygame.init()
     clock = pygame.time.Clock()
@@ -31,3 +29,21 @@ def paint_arm(screen, armVectors: jnp.array):
           startingPosition = origin + jnp.sum(armVectors[0:armNum], 0)
         endingPosition = origin + jnp.sum(armVectors[0:armNum + 1], 0)
         pygame.draw.line(screen, armColor, startingPosition.tolist(), endingPosition.tolist(), 5)
+
+def createEllipseRectangle(centerPosition, majorLength, minorLength) -> pygame.Rect:
+    origin = get_origin()
+    leftPosition = origin[0] + centerPosition[0] - majorLength
+    topPosition = origin[1] + centerPosition[1] - minorLength
+    rectangleWidth = 2 * majorLength
+    rectangleHeight = 2 * minorLength
+
+    referenceRectangle = pygame.Rect(float(leftPosition), float(topPosition),
+                                     float(rectangleWidth), float(rectangleHeight))
+    return referenceRectangle
+
+def paintEllipseAngle(surface, color, rect, angle, width = 2):
+    ellipseSurface = pygame.Surface(rect.size, pygame.SRCALPHA)
+    pygame.draw.ellipse(ellipseSurface, color, ellipseSurface.get_rect(), width)
+
+    rotatedSurface = pygame.transform.rotate(ellipseSurface, -jnp.degrees(angle))
+    surface.blit(rotatedSurface, rotatedSurface.get_rect(center = rect.center))
