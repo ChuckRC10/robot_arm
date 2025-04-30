@@ -9,7 +9,7 @@ def game_setup():
     return clock, screen
 
 def get_origin():
-    origin = [screenSize[0]/2, screenSize[1]/2]
+    origin = jnp.array([screenSize[0]/2, screenSize[1]/2])
     return origin
         
 def paint_rect(screen, wantedPosition):
