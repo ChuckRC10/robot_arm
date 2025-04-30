@@ -9,6 +9,15 @@ def game_setup():
     screen = pygame.display.set_mode(screenSize)
     return clock, screen
 
+def textSetup():
+    font = pygame.font.Font('freesansbold.ttf', 16)
+    areaString = f"Area: inital whatevers"
+    text = font.render(areaString, True, (0,0,0), (255,255,255))
+    textRect = text.get_rect()
+    locationRatio = .7
+    textRect.center = (screenSize[0] * locationRatio, screenSize[1] * (locationRatio + .2) )
+    return font, textRect
+
 def get_origin():
     origin = jnp.array([screenSize[0]/2, screenSize[1]/2])
     return origin
@@ -47,3 +56,9 @@ def paintEllipseAngle(surface, color, rect, angle, width = 2):
 
     rotatedSurface = pygame.transform.rotate(ellipseSurface, -jnp.degrees(angle))
     surface.blit(rotatedSurface, rotatedSurface.get_rect(center = rect.center))
+
+def paintText(surface, area, font, textRect):
+    areaString = f"Area: {area:7.0f} whatevers"
+    text = font.render(areaString, True, (0,0,0), (255,255,255))
+    surface.blit(text, textRect)
+    return

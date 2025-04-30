@@ -1,6 +1,6 @@
 
 armLength = 50
-armNumber = 6
+armNumber = 4
 
 dampingConstant = 50
 maxPositionDelta = 6

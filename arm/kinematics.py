@@ -62,3 +62,7 @@ def get_ellipse_size(ellipse_coefficients):
         minor_axis_size = minimum_size
 
     return jnp.array([major_axis_size, minor_axis_size])
+
+def getEllipseArea(majorAxisSize, minorAxisSize) -> float:
+    area = jnp.pi * majorAxisSize * minorAxisSize
+    return float(area)

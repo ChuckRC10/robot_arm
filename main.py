@@ -1,12 +1,13 @@
 import pygame
 import jax.numpy as jnp
-from gui_files.game_view import game_setup, paint_arm, paint_rect, createEllipseRectangle, paintEllipseAngle
+from gui_files.game_view import *
 from gui_files.handling_inputs import get_movement
 from config import backgroundColor, ellipseColor, maxPositionDelta, armLength, armNumber, dampingConstant
 from arm.arm_model import RobotArm
 from arm import kinematics
 
 clock, screen = game_setup() # initialize window
+font, textRect = textSetup()
 armLengths = armLength * jnp.ones((armNumber))
 arm = RobotArm(armLengths) # initialize arm class
 
@@ -50,10 +51,13 @@ while running:
 
     referenceRectangle = createEllipseRectangle(endEffectorPosition, float(ellipseSize[0]),float(ellipseSize[1]))
     ellipseAngle = kinematics.getVelocityEllipseAngle(ellipseCoefficients)
+    ellipseArea = kinematics.getEllipseArea(ellipseSize[0], ellipseSize[1])
+
     # 2nd screen update
     paint_rect(screen, wntd_pos)
     paint_arm(screen, armVectors)
     paintEllipseAngle(screen, ellipseColor, referenceRectangle, ellipseAngle)
+    paintText(screen, ellipseArea, font, textRect)
 
     # refresh screen
     pygame.display.flip()
