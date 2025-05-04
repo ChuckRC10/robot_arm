@@ -9,15 +9,12 @@ def inv_kinematics_least_sqr(Jacobian: jnp.array, error: jnp.array, damping_c: f
 
 
 def getVelocityEllipseAngle(ellipseEquationMatrix):
-    A_coefficient = ellipseEquationMatrix[0, 0]
-    B_coefficient = 2 * ellipseEquationMatrix[0, 1]
-    C_coefficient = ellipseEquationMatrix[1, 1]
-
-    angle = 0.5 * jnp.arctan(B_coefficient / (A_coefficient - C_coefficient))
+    _, eigenvectors = jnp.linalg.eig(ellipseEquationMatrix)
+    angle = jnp.arctan2(eigenvectors[1, 0], eigenvectors[0, 0])
     if jnp.isnan(angle):
         angle = 0
 
-    return angle
+    return float(jnp.real(angle))
 
 def get_ellipse_size(ellipseEquationMatrix):
     #TODO: Test if this even works right
