@@ -35,7 +35,7 @@ while running:
     jacobian = arm.get_jacobian()
     error = arm.get_error(wntd_pos)
     delta_q = kinematics.inv_kinematics_least_sqr(jacobian, error, dampingConstant)
-    ellipse_coefficients = kinematics.get_velocity_ellipse_coefficients(jacobian)
+    
     # update arm angles
     arm.set_angles(arm.armAngles + delta_q)
 
@@ -43,14 +43,14 @@ while running:
     armVectors = arm.getArmVectors(arm.armAngles)
 
     # set up velocity manipulability ellipse
-    ellipseCoefficients = kinematics.get_velocity_ellipse_coefficients(jacobian)
-    ellipseSize = kinematics.get_ellipse_size(ellipseCoefficients)
+    ellipseEquationMatrix = jnp.linalg.inv(jacobian @ jacobian.T)
+    ellipseSize = kinematics.get_ellipse_size(ellipseEquationMatrix)
 
     armAngles = arm.armAngles
     endEffectorPosition = arm.get_end_effector(armAngles)
 
     referenceRectangle = createEllipseRectangle(endEffectorPosition, float(ellipseSize[0]),float(ellipseSize[1]))
-    ellipseAngle = kinematics.getVelocityEllipseAngle(ellipseCoefficients)
+    ellipseAngle = kinematics.getVelocityEllipseAngle(ellipseEquationMatrix)
     ellipseArea = kinematics.getEllipseArea(ellipseSize[0], ellipseSize[1])
 
     # 2nd screen update
