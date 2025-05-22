@@ -10,3 +10,5 @@ screenSize = [500, 500]
 armColor = (255, 0, 0)
 ellipseColor = (0,0,0)
 backgroundColor = (240, 255, 255)
+
+velocityCircle = 0

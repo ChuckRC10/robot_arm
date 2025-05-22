@@ -1,14 +1,14 @@
 import pygame
-import jax.numpy as jnp
+import numpy as np
 from gui_files.game_view import *
 from gui_files.handling_inputs import get_movement
-from config import backgroundColor, ellipseColor, maxPositionDelta, armLength, armNumber, dampingConstant
+from config import backgroundColor, ellipseColor, maxPositionDelta, armLength, armNumber, dampingConstant, velocityCircle
 from arm.arm_model import RobotArm
 from arm import kinematics
 
 clock, screen = game_setup() # initialize window
 font, textRect = textSetup()
-armLengths = armLength * jnp.ones((armNumber))
+armLengths = armLength * np.ones((armNumber))
 arm = RobotArm(armLengths) # initialize arm class
 
 wntd_pos = arm.get_end_effector(arm.armAngles)
@@ -43,7 +43,7 @@ while running:
     armVectors = arm.getArmVectors(arm.armAngles)
 
     # set up velocity manipulability ellipse
-    ellipseEquationMatrix = jnp.linalg.inv(jacobian @ jacobian.T)
+    ellipseEquationMatrix = np.linalg.inv(jacobian @ jacobian.T)
     ellipseSize = kinematics.get_ellipse_size(ellipseEquationMatrix)
 
     armAngles = arm.armAngles
@@ -56,8 +56,9 @@ while running:
     # 2nd screen update
     paint_rect(screen, wntd_pos)
     paint_arm(screen, armVectors)
-    paintEllipseAngle(screen, ellipseColor, referenceRectangle, ellipseAngle)
-    paintText(screen, ellipseArea, font, textRect)
+    if velocityCircle:
+        paintEllipseAngle(screen, ellipseColor, referenceRectangle, ellipseAngle)
+        paintText(screen, ellipseArea, font, textRect)
 
     # refresh screen
     pygame.display.flip()

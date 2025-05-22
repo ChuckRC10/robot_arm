@@ -1,5 +1,5 @@
 import pygame
-import jax.numpy as jnp
+import numpy as np
 from config import armColor, screenSize
 
 # TODO:
@@ -19,7 +19,7 @@ def textSetup():
     return font, textRect
 
 def get_origin():
-    origin = jnp.array([screenSize[0]/2, screenSize[1]/2])
+    origin = np.array([screenSize[0]/2, screenSize[1]/2])
     return origin
         
 def paint_rect(screen, wantedPosition):
@@ -28,15 +28,15 @@ def paint_rect(screen, wantedPosition):
     pointerRectangle = pygame.Rect(float(rectanglePosition[0]), float(rectanglePosition[1]), 5, 5)
     pygame.draw.rect(screen, armColor, pointerRectangle) 
 
-def paint_arm(screen, armVectors: jnp.array):
-    origin = jnp.array(get_origin())
+def paint_arm(screen, armVectors: np.array):
+    origin = np.array(get_origin())
 
     for armNum in range(len(armVectors)):
         if armNum == 0:
             startingPosition = origin
         else:
-          startingPosition = origin + jnp.sum(armVectors[0:armNum], 0)
-        endingPosition = origin + jnp.sum(armVectors[0:armNum + 1], 0)
+          startingPosition = origin + np.sum(armVectors[0:armNum], 0)
+        endingPosition = origin + np.sum(armVectors[0:armNum + 1], 0)
         pygame.draw.line(screen, armColor, startingPosition.tolist(), endingPosition.tolist(), 5)
 
 def createEllipseRectangle(centerPosition, majorLength, minorLength) -> pygame.Rect:
@@ -54,7 +54,7 @@ def paintEllipseAngle(surface, color, rect, angle, width = 2):
     ellipseSurface = pygame.Surface(rect.size, pygame.SRCALPHA)
     pygame.draw.ellipse(ellipseSurface, color, ellipseSurface.get_rect(), width)
 
-    rotatedSurface = pygame.transform.rotate(ellipseSurface, -jnp.degrees(angle))
+    rotatedSurface = pygame.transform.rotate(ellipseSurface, -np.degrees(angle))
     surface.blit(rotatedSurface, rotatedSurface.get_rect(center = rect.center))
 
 def paintText(surface, area, font, textRect):

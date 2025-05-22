@@ -1,15 +1,16 @@
 import jax
+import numpy as np
 import jax.numpy as jnp
-from jax.numpy import sin, cos
+from numpy import sin, cos
 
 class RobotArm:
-    def __init__(self, armLengths:jnp.array):
+    def __init__(self, armLengths:np.array):
         
         self.armLengths = armLengths
         self.armNumber = len(armLengths)
-        self.armAngles = jnp.ones(self.armNumber)
+        self.armAngles = np.ones(self.armNumber)
 
-    def set_angles(self, armAngles: jnp.array):
+    def set_angles(self, armAngles: np.array):
         self.armAngles = armAngles
 
     def getArmVectors(self, angles) -> jnp.array:
@@ -29,11 +30,11 @@ class RobotArm:
 
         return armEndVector
     
-    def get_jacobian(self) -> jnp.array:
+    def get_jacobian(self) -> np.array:
         J = jax.jacrev(lambda angles: self.get_end_effector(angles))
-        return J(self.armAngles)
+        return  np.array(J(self.armAngles))
     
-    def get_error(self, wntd_pos: jnp.array) -> jnp.array:
+    def get_error(self, wntd_pos: np.array) -> np.array:
         arm_pos = self.get_end_effector(self.armAngles)
         error = wntd_pos - arm_pos
         return error
